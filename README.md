@@ -2,13 +2,13 @@
 
 > *"Creating Visual Stories That Speak."*
 
-Sebuah website portofolio pribadi milik **Fikri Abiyyu Rahman** — seorang mahasiswa yang berfokus di bidang desain, fotografi, dan editing. Website ini dibangun menggunakan HTML, CSS, dan Bootstrap 5 sebagai tugas Mini Project mata kuliah Pemrograman Berbasis Web (PBW).
+Sebuah website portofolio pribadi milik **Fikri Abiyyu Rahman** — seorang mahasiswa yang berfokus di bidang desain, fotografi, dan editing. Website ini dibangun menggunakan PHP, MySQL, HTML, CSS, dan Bootstrap 5 sebagai tugas Mini Project mata kuliah Pemrograman Berbasis Web (PBW).
 
 ---
 
 ## 📋 Deskripsi Singkat
 
-**KEP Portfolio** adalah website portofolio statis berbasis HTML/CSS yang menampilkan profil pribadi, keahlian (hard skill & soft skill), riwayat pendidikan dan pengalaman kerja, serta koleksi sertifikat yang dimiliki. Desain menggunakan tema gelap (*dark mode*) dengan tipografi Poppins untuk kesan modern dan profesional.
+**KEP Portfolio** adalah website portofolio **dinamis** berbasis PHP/MySQL yang menampilkan profil pribadi, keahlian (hard skill & soft skill), riwayat pendidikan dan pengalaman kerja, serta koleksi sertifikat yang dimiliki. Data ditampilkan secara dinamis dari database MySQL, sehingga konten dapat diperbarui tanpa mengubah kode. Desain menggunakan tema gelap (*dark mode*) dengan tipografi Poppins untuk kesan modern dan profesional.
 
 ---
 
@@ -17,7 +17,8 @@ Sebuah website portofolio pribadi milik **Fikri Abiyyu Rahman** — seorang maha
 - **Navigasi Responsif** — Navbar sticky dengan efek collapse di perangkat mobile
 - **Hero Section** — Tampilan pembuka yang bold dan impactful
 - **About Me** — Foto diri, deskripsi, hard skill dengan progress bar animasi, dan soft skill
-- **Progress Bar Animasi** — Visualisasi tingkat keahlian per software dengan warna unik
+- **Progress Bar Animasi Dinamis** — Data keahlian per software diambil dari database (tabel `hard_skills`)
+- **Soft Skill Dinamis** — Data pendidikan, pengalaman kerja, dan organisasi diambil dari database (tabel `soft_skills`)
 - **Certificates Gallery** — Grid kartu sertifikat yang responsif
 - **Fully Responsive** — Tampilan optimal di desktop, tablet, dan smartphone
 - **Dark Theme** — Desain konsisten bernuansa gelap dan elegan
@@ -37,7 +38,6 @@ Navigasi tetap di bagian atas halaman dengan latar belakang hitam dan teks putih
 <img width="1919" height="71" alt="image" src="https://github.com/user-attachments/assets/e5e0117e-6764-48d5-b3db-b0584bb15fd5" />
 <img width="474" height="59" alt="image" src="https://github.com/user-attachments/assets/7c684608-9b7e-40ee-9247-7efce4e824b3" />
 
-
 ---
 
 ### 2. Hero Section
@@ -46,7 +46,6 @@ Bagian pembuka dengan heading besar bertuliskan *"Creating Visual Stories That S
 > 📸 *Screenshot placeholder — Hero Section*
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/eee32fe8-fabe-486d-bdb5-fc049a9a2362" />
 
-
 ---
 
 ### 3. About Me Section
@@ -54,15 +53,14 @@ Terbagi menjadi beberapa sub-bagian:
 
 - **Foto diri** dengan efek crop dan border elegan
 - **Deskripsi pribadi** yang menjelaskan latar belakang dan passion
-- **Hard Skill** — 6 kartu software (Illustrator, Photoshop, Premiere Pro, Affinity Studio, DaVinci Resolve, Figma) masing-masing dengan progress bar berwarna
-- **Soft Skill** — Riwayat pendidikan, pengalaman kerja, dan pengalaman organisasi
+- **Hard Skill** — 6 kartu software (Illustrator, Photoshop, Premiere Pro, Affinity Studio, DaVinci Resolve, Figma) masing-masing dengan progress bar berwarna, **data diambil dari tabel `hard_skills`**
+- **Soft Skill** — Riwayat pendidikan, pengalaman kerja, dan pengalaman organisasi, **data diambil dari tabel `soft_skills`**
 
 > 📸 *Screenshot placeholder — About Me Section*
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/1abcaa6d-4c51-4315-a55a-c3ce735eb8dc" />
 
 > 📸 *Screenshot placeholder — Hard Skill Cards & Soft Skill Panel*
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/330b5f4d-6635-4101-9849-14e8e5f650ef" />
-
 
 ---
 
@@ -72,11 +70,58 @@ Galeri sertifikat dalam format grid (3 kolom di desktop, 2 di tablet, 1 di mobil
 > 📸 *Screenshot placeholder — Certificates Section*
 <img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/553dbec7-8c74-4d01-a124-442848224e5f" />
 
-
 ---
 
 ### 5. Footer
 Footer sederhana berisi alamat email kontak (`kepvisual@gmail.com`) dengan garis pemisah di bagian atas.
+
+---
+
+## 🗄️ Struktur Database
+
+### Tabel `hard_skills`
+
+Menyimpan data keahlian software beserta persentase dan warna progress bar.
+
+| Kolom | Tipe | Keterangan |
+|---|---|---|
+| `id` | INT AUTO_INCREMENT | Primary key |
+| `nama_software` | VARCHAR(100) | Nama software |
+| `icon_path` | VARCHAR(255) | Path ke file ikon |
+| `persentase` | INT | Nilai progress bar (0–100) |
+| `warna_bar` | VARCHAR(50) | Warna hex progress bar |
+
+```sql
+CREATE TABLE hard_skills (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nama_software VARCHAR(100) NOT NULL,
+    icon_path VARCHAR(255) NOT NULL,
+    persentase INT NOT NULL,
+    warna_bar VARCHAR(50) NOT NULL
+);
+```
+
+---
+
+### Tabel `soft_skills`
+
+Menyimpan data pendidikan, pengalaman kerja, dan pengalaman organisasi.
+
+| Kolom | Tipe | Keterangan |
+|---|---|---|
+| `id` | INT AUTO_INCREMENT | Primary key |
+| `kategori` | VARCHAR(50) | `Education`, `Work`, atau `Organizational` |
+| `judul` | VARCHAR(150) | Nama posisi / gelar |
+| `keterangan` | VARCHAR(255) | Instansi dan periode |
+
+```sql
+CREATE TABLE soft_skills (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    kategori VARCHAR(50) NOT NULL,
+    judul VARCHAR(150) NOT NULL,
+    keterangan VARCHAR(255) NOT NULL
+);
+```
 
 ---
 
@@ -87,7 +132,8 @@ Footer sederhana berisi alamat email kontak (`kepvisual@gmail.com`) dengan garis
 ```
 MINPRO-PBW-1/
 │
-├── index.html                  # File utama HTML
+├── index.php                   # File utama (diubah dari .html ke .php)
+├── koneksi.php                 # File koneksi ke database MySQL
 ├── style.css                   # File styling utama
 │
 ├── photos/
@@ -109,6 +155,92 @@ MINPRO-PBW-1/
         ├── KC 1.jpg
         ├── KC 2.jpg
         └── SC.png
+```
+
+---
+
+### 📄 PHP — Koneksi Database (`koneksi.php`)
+
+File ini bertugas menghubungkan PHP ke database MySQL dan di-include di `index.php`.
+
+```php
+<?php
+$host     = "localhost";
+$username = "root";
+$password = "";
+$database = "db_profile";
+
+$koneksi = mysqli_connect($host, $username, $password, $database);
+
+if (!$koneksi) {
+    die("Koneksi gagal: " . mysqli_connect_error());
+}
+?>
+```
+
+---
+
+### 📄 PHP — Hard Skill (Progress Bar Dinamis)
+
+Data hard skill diambil dari tabel `hard_skills` dan di-loop untuk menghasilkan kartu progress bar secara otomatis.
+
+```php
+<?php
+include 'koneksi.php';
+$query = mysqli_query($koneksi, "SELECT * FROM hard_skills");
+?>
+
+<div class="row g-3 flex-grow-1">
+    <?php while ($skill = mysqli_fetch_assoc($query)) : ?>
+    <div class="col-6 d-flex">
+        <div class="hard-skill">
+            <img src="<?= $skill['icon_path'] ?>" class="software-icon">
+            <p class="poppins-medium"><?= $skill['nama_software'] ?></p>
+            <div class="progress poppins-medium" role="progressbar"
+                 aria-valuenow="<?= $skill['persentase'] ?>"
+                 aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar progress-bar-striped progress-bar-animated"
+                     style="width: <?= $skill['persentase'] ?>%;
+                            background-color: <?= $skill['warna_bar'] ?>;">
+                    <?= $skill['persentase'] ?>%
+                </div>
+            </div>
+        </div>
+    </div>
+    <?php endwhile; ?>
+</div>
+```
+
+---
+
+### 📄 PHP — Soft Skill Dinamis
+
+Data soft skill diambil dari tabel `soft_skills`, dikelompokkan berdasarkan kolom `kategori`, lalu ditampilkan per kategori menggunakan `foreach`.
+
+```php
+<?php
+$query_soft = mysqli_query($koneksi, "SELECT * FROM soft_skills ORDER BY kategori, id");
+$soft_skills = [];
+while ($row = mysqli_fetch_assoc($query_soft)) {
+    $soft_skills[$row['kategori']][] = $row;
+}
+?>
+
+<div class="soft-skill">
+    <!-- Education -->
+    <div class="Education">
+        <h4 class="poppins-semibold" style="padding-bottom: 12px;">Education 🎓</h4>
+        <?php foreach ($soft_skills['Education'] as $item) : ?>
+            <div>
+                <p class="poppins-semibold mb-0"><?= $item['judul'] ?></p>
+                <p class="poppins-medium" style="opacity: 0.4;"><?= $item['keterangan'] ?></p>
+            </div>
+        <?php endforeach; ?>
+        <hr class="my-4">
+    </div>
+    <!-- Work & Organizational (pola sama) -->
+    ...
+</div>
 ```
 
 ---
@@ -137,43 +269,6 @@ Menggunakan komponen Navbar Bootstrap 5 dengan `sticky-top` agar tetap terlihat 
 
 ---
 
-### 📄 HTML — Hero Section
-
-Menggunakan `section` dengan ID `Home` dan class `hero` yang dikonfigurasi di CSS untuk tampil setinggi 80% viewport.
-
-```html
-<section id="Home" class="hero">
-  <div class="container-fluid px-5">
-    <h1 class="poppins-semibold">Creating Visual <br> Stories That Speak.</h1>
-    <p class="poppins-medium" style="opacity: 0.2; padding-top: 24px;">
-      I am a visual storyteller who turns complex problems into simple, <br>
-      beautiful and easy to understand stories.
-    </p>
-  </div>
-</section>
-```
-
----
-
-### 📄 HTML — Hard Skill (Progress Bar)
-
-Setiap kartu hard skill memuat ikon, nama software, dan Bootstrap Progress Bar dengan warna kustom dari CSS variable.
-
-```html
-<div class="hard-skill">
-  <img src="assets/icon/figma-icon.png" class="software-icon">
-  <p class="poppins-medium">Figma</p>
-  <div class="progress" role="progressbar" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">
-    <div class="progress-bar progress-bar-striped progress-bar-animated"
-         style="width: 85%; background-color: var(--color-orange-figma);">
-      85%
-    </div>
-  </div>
-</div>
-```
-
----
-
 ### 📄 HTML — Certificate Cards
 
 Sertifikat ditampilkan menggunakan komponen Card Bootstrap dalam sistem grid responsif.
@@ -194,8 +289,6 @@ Sertifikat ditampilkan menggunakan komponen Card Bootstrap dalam sistem grid res
 
 ### 🎨 CSS — Variabel Warna & Tema
 
-Warna progress bar masing-masing software didefinisikan sebagai CSS custom property (variabel) agar mudah dikelola.
-
 ```css
 :root {
   --color-orange: #FF9A00;        /* Adobe Illustrator */
@@ -207,79 +300,7 @@ Warna progress bar masing-masing software didefinisikan sebagai CSS custom prope
 }
 ```
 
----
-
-### 🎨 CSS — Hero Section
-
-```css
-.hero {
-  display: flex;
-  justify-content: left;
-  align-items: center;
-  min-height: 80vh;
-  text-align: left;
-}
-```
-
----
-
-### 🎨 CSS — Gambar Profil
-
-Foto profil dibungkus dalam `.gambar-wrapper` dengan `aspect-ratio` dan `overflow: hidden` untuk efek crop rapi.
-
-```css
-.gambar-wrapper {
-  display: block;
-  width: 100%;
-  height: 100%;
-  aspect-ratio: 3 / 3;
-  overflow: hidden;
-  border-radius: 3%;
-  border: 2px solid #ffffff1e;
-}
-
-.gambar {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transform: scale(1.5) translate(8%, 8%);
-}
-```
-
----
-
-### 🎨 CSS — Kartu Hard Skill & Soft Skill
-
-```css
-.hard-skill {
-  display: flex;
-  flex-direction: column;
-  align-items: left;
-  gap: 4px;
-  background-color: rgb(10, 10, 10);
-  height: 100%;
-  width: 100%;
-  padding: 24px;
-  border: 2px solid #ffffff1e;
-  border-radius: 12px;
-}
-```
-
----
-
-### 🎨 CSS — Tipografi (Poppins)
-
-Semua varian font Poppins didefinisikan sebagai utility class, memudahkan penerapan konsisten di seluruh elemen.
-
-```css
-.poppins-semibold {
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
-  font-style: normal;
-}
-```
-
-> ℹ️ *Project ini tidak menggunakan JavaScript/Vue JS secara terpisah. Interaktivitas (navbar collapse, progress bar animasi) sepenuhnya ditangani oleh Bootstrap 5 JS bundle.*
+> ℹ️ *Warna progress bar kini juga disimpan di kolom `warna_bar` pada tabel `hard_skills`, sehingga nilai hex di atas sudah di-insert ke database dan tidak lagi di-hardcode di HTML.*
 
 ---
 
@@ -287,6 +308,8 @@ Semua varian font Poppins didefinisikan sebagai utility class, memudahkan penera
 
 | Teknologi | Versi | Keterangan |
 |---|---|---|
+| PHP | 8.x | Server-side scripting & koneksi database |
+| MySQL | 8.x | Penyimpanan data dinamis |
 | HTML5 | — | Struktur dan konten halaman |
 | CSS3 | — | Styling kustom dan layout |
 | Bootstrap | 5.3.8 | Framework CSS responsif |
@@ -296,18 +319,30 @@ Semua varian font Poppins didefinisikan sebagai utility class, memudahkan penera
 
 ## 🚀 Cara Menjalankan Project
 
-Project ini merupakan website statis yang tidak memerlukan instalasi atau server khusus.
+Project ini memerlukan **XAMPP** (atau server lokal sejenis) karena menggunakan PHP dan MySQL.
 
-**Cara 1 — Buka Langsung:**
-1. Clone atau unduh repository ini
-2. Buka file `index.html` langsung di browser
+**Langkah-langkah:**
 
-**Cara 2 — Menggunakan VS Code Live Server:**
-1. Install ekstensi **Live Server** di VS Code
-2. Klik kanan pada `index.html` → *Open with Live Server*
-3. Website akan terbuka otomatis di `http://127.0.0.1:5500`
+1. Install dan jalankan **XAMPP**, pastikan Apache dan MySQL aktif
+2. Clone atau salin folder project ke dalam `C:/xampp/htdocs/`
+3. Buka **phpMyAdmin** di `http://localhost/phpmyadmin`
+4. Buat database baru bernama `db_profile`
+5. Import atau jalankan SQL berikut untuk membuat tabel dan mengisi data awal:
 
-> ⚠️ Pastikan seluruh folder (`assets/`, `photos/`) berada dalam satu direktori yang sama dengan `index.html` agar gambar dan ikon tampil dengan benar.
+```sql
+-- Tabel hard_skills
+CREATE TABLE hard_skills ( ... );
+INSERT INTO hard_skills ... ;
+
+-- Tabel soft_skills
+CREATE TABLE soft_skills ( ... );
+INSERT INTO soft_skills ... ;
+```
+
+6. Pastikan `koneksi.php` sudah sesuai (host, username, password, nama database)
+7. Buka browser dan akses `http://localhost/MINPRO-PBW-1/`
+
+> ⚠️ Jangan buka file `index.php` langsung dari File Explorer — PHP hanya berjalan melalui server (XAMPP).
 
 ---
 
@@ -316,7 +351,8 @@ Project ini merupakan website statis yang tidak memerlukan instalasi atau server
 ```
 MINPRO-PBW-1/
 │
-├── index.html
+├── index.php
+├── koneksi.php
 ├── style.css
 ├── README.md
 │
